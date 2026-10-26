@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>制造业 AI Copilot</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+
+<body>
+
+    <!-- =====================================================
+         顶部导航
+    ====================================================== -->
+
+    <header class="topbar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                AI
+            </div>
+
+            <div>
+
+                <h1>
+                    制造业 AI Copilot
+                </h1>
+
+                <p>
+                    多智能体制造业智能分析平台
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="system-status">
+
+            <span class="status-dot"></span>
+
+            <span>
+                系统运行中
+            </span>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         主体
+    ====================================================== -->
+
+    <main class="container">
+
+        <!-- ================================================
+             核心能力
+        ================================================= -->
+
+        <section class="capability-grid">
+
+            <div class="capability-card">
+
+                <span class="capability-title">
+                    多智能体协作
+                </span>
+
+                <span class="capability-description">
+                    专业 Agent 分工与协同执行
+                </span>
+
+            </div>
+
+
+            <div class="capability-card">
+
+                <span class="capability-title">
+                    DAG 工作流
+                </span>
+
+                <span class="capability-description">
+                    基于依赖关系的任务调度
+                </span>
+
+            </div>
+
+
+            <div class="capability-card">
+
+                <span class="capability-title">
+                    RAG 企业知识
+                </span>
+
+                <span class="capability-description">
+                    企业知识库检索与增强生成
+                </span>
+
+            </div>
+
+
+            <div class="capability-card">
+
+                <span class="capability-title">
+                    MES 实时生产
+                </span>
+
+                <span class="capability-description">
+                    实时生产系统数据接入
+                </span>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================================
+             用户问题
+        ================================================= -->
+
+        <section class="panel query-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        制造业智能分析
+                    </h2>
+
+                    <p>
+                        输入生产、订单、设备、知识库等问题，
+                        AI Copilot 将自动规划任务并调用对应智能体。
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <textarea id="questionInput" placeholder="例如：分析当前订单和生产状态，并给出风险建议。" rows="5"></textarea>
+
+
+            <!-- 示例问题 -->
+
+            <div class="example-section">
+
+                <span class="example-label">
+                    示例问题
+                </span>
+
+
+                <div class="example-list">
+
+                    <button class="example-button" data-question="什么是精益生产？">
+                        通用问答
+                    </button>
+
+
+                    <button class="example-button" data-question="销售订单有几个？">
+                        数据库查询
+                    </button>
+
+
+                    <button class="example-button" data-question="根据知识库说明制造工艺相关要求。">
+                        知识库 RAG
+                    </button>
+
+
+                    <button class="example-button" data-question="查询设备 EQ002 当前状态。">
+                        MES 查询
+                    </button>
+
+
+                    <button class="example-button" data-question="分析当前订单和生产状态，并给出风险建议。">
+                        多智能体分析
+                    </button>
+
+
+                    <button class="example-button" data-question="分析当前设备异常，并结合 SOP 给出处理建议。">
+                        依赖任务分析
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- 操作 -->
+
+            <div class="query-actions">
+
+                <span class="keyboard-tip">
+                    Ctrl + Enter 快速发送
+                </span>
+
+
+                <div>
+
+                    <button id="clearButton" class="secondary-button">
+                        清空
+                    </button>
+
+
+                    <button id="sendButton" class="primary-button">
+                        开始分析
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================================
+             加载状态
+        ================================================= -->
+
+        <section id="loadingPanel" class="panel loading-panel hidden">
+
+            <div class="loader"></div>
+
+
+            <div>
+
+                <h3>
+                    AI Copilot 正在分析...
+                </h3>
+
+                <p>
+                    正在规划任务、调度智能体并调用企业工具。
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================================
+             错误
+        ================================================= -->
+
+        <section id="errorPanel" class="error-panel hidden">
+
+            <strong>
+                执行失败
+            </strong>
+
+            <span id="errorMessage">
+                执行失败，请查看后端日志。
+            </span>
+
+        </section>
+
+
+        <!-- ================================================
+             执行结果
+        ================================================= -->
+
+        <section id="resultArea" class="hidden">
+
+            <!-- 最终回答 -->
+
+            <section class="panel">
+
+                <div class="panel-header result-header">
+
+                    <div>
+
+                        <div class="section-label">
+                            最终回答
+                        </div>
+
+                        <h2>
+                            Copilot 分析结果
+                        </h2>
+
+                    </div>
+
+
+                    <div id="durationBadge" class="duration-badge">
+                        执行耗时：-
+                    </div>
+
+                </div>
+
+
+                <div id="answerContent" class="answer-content">
+                </div>
+
+            </section>
+
+
+            <!-- 工作流 -->
+
+            <section class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <div class="section-label">
+                            工作流执行
+                        </div>
+
+                        <h2>
+                            智能体任务执行情况
+                        </h2>
+
+                        <p>
+                            以下任务由 LLM Planner 自动规划，
+                            并由 DAG 调度器根据依赖关系执行。
+                        </p>
+
+                    </div>
+
+
+                    <div id="workflowSummary" class="workflow-summary">
+                    </div>
+
+                </div>
+
+
+                <div id="taskList" class="task-list">
+                </div>
+
+            </section>
+
+
+            <!-- 执行架构 -->
+
+            <section class="panel architecture-panel">
+
+                <div class="section-label">
+                    执行链路
+                </div>
+
+                <h2>
+                    多智能体运行架构
+                </h2>
+
+
+                <div class="pipeline">
+
+                    <div class="pipeline-node">
+                        用户问题
+                    </div>
+
+                    <div class="pipeline-arrow">
+                        →
+                    </div>
+
+                    <div class="pipeline-node">
+                        任务规划器
+                    </div>
+
+                    <div class="pipeline-arrow">
+                        →
+                    </div>
+
+                    <div class="pipeline-node">
+                        DAG 调度器
+                    </div>
+
+                    <div class="pipeline-arrow">
+                        →
+                    </div>
+
+                    <div class="pipeline-node highlight">
+                        专业智能体
+                    </div>
+
+                    <div class="pipeline-arrow">
+                        →
+                    </div>
+
+                    <div class="pipeline-node">
+                        企业工具
+                    </div>
+
+                    <div class="pipeline-arrow">
+                        →
+                    </div>
+
+                    <div class="pipeline-node">
+                        结果综合器
+                    </div>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         Footer
+    ====================================================== -->
+
+    <footer>
+
+        制造业 AI Copilot
+        · 多智能体协作
+        · LLM 工程
+        · Python 后端
+
+    </footer>
+
+
+    <script src="/static/app.js"></script>
+
+</body>
+
+</html>
